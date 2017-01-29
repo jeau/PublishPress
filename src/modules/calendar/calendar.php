@@ -117,7 +117,7 @@ if (!class_exists('PP_Calendar')) {
             // Define the create-post capability
             $this->create_post_cap = apply_filters('pp_calendar_create_post_cap', 'edit_posts');
 
-            require_once(PUBLISHPRESS_ROOT . '/common/php/' . 'screen-options.php');
+            require_once(PUBLISHPRESS_ROOT_PATH . '/common/php/' . 'screen-options.php');
             add_screen_options_panel(self::usermeta_key_prefix . 'screen_options', __('Calendar Options', 'publishpress'), array($this, 'generate_screen_options'), self::screen_id, false, true);
             add_action('admin_init', array($this, 'handle_save_screen_options'));
 

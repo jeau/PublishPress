@@ -98,7 +98,7 @@ class PP_Story_Budget extends PP_Module
 
         add_action('admin_init', array($this, 'handle_form_date_range_change'));
 
-        include_once(PUBLISHPRESS_ROOT . '/common/php/' . 'screen-options.php');
+        include_once(PUBLISHPRESS_ROOT_PATH . '/common/php/' . 'screen-options.php');
         if (function_exists('add_screen_options_panel')) {
             add_screen_options_panel(self::usermeta_key_prefix . 'screen_columns', __('Screen Layout', 'publishpress'), array($this, 'print_column_prefs'), self::screen_id, array($this, 'save_column_prefs'), true);
         }

@@ -81,7 +81,21 @@ if (!class_exists('PP_Settings')) {
         {
             global $publishpress;
 
-            add_menu_page($this->module->title, $this->module->title, 'manage_options', $this->module->settings_slug, array($this, 'settings_page_controller')) ;
+            add_options_page(
+                $this->module->title,
+                $this->module->title,
+                'manage_options',
+                $this->module->settings_slug,
+                array($this, 'settings_page_controller')
+            );
+
+            add_menu_page(
+                $this->module->title,
+                $this->module->title,
+                'manage_options',
+                $this->module->settings_slug,
+                array($this, 'settings_page_controller')
+            );
 
             foreach ($publishpress->modules as $mod_name => $mod_data) {
                 if (isset($mod_data->options->enabled) && $mod_data->options->enabled == 'on'

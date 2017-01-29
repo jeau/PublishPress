@@ -212,4 +212,12 @@ class RoboFile extends \Robo\Tasks
 
         return $return;
     }
+
+    public function cleanup()
+    {
+        // We need to remove from the package everything which is not on git...
+        // https://makandracards.com/makandra/17529-git-how-to-remove-ignored-files-from-your-repository-s-directory
+        $result = shell_exec('git check-ignore -n -v src/**/*');
+        var_dump($result);
+    }
 }

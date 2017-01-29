@@ -4,11 +4,11 @@
     "homepage"   : "http://pressshack.com/",
     "type"       : "wordpress-plugin",
     "license"    : "GPL-2.0+",
-    "require"    : {
-        "composer/installers": "~1.0",
-        "gettext/gettext": "^4.2"
+    "config"     : {
+        "vendor-dir": "src/vendor"
     },
-    "require-dev": {
-        "consolidation/robo": "^1.0"
+    "require"    : {
+        "timber/timber": "^1.2",
+        "pimple/pimple": "^3.0"
     }
 }
