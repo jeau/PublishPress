@@ -50,6 +50,9 @@ class RoboFile extends \Robo\Tasks
     {
         $this->say('Building the package');
 
+        // Make a cleanup before build the package
+        $this->srcCleanup();
+
         // Build the package
         $filename = self::PLUGIN_NAME . '.zip';
         $packPath = self::PACKAGE_PATH . '/'. $filename;
@@ -213,11 +216,8 @@ class RoboFile extends \Robo\Tasks
         return $return;
     }
 
-    public function cleanup()
+    private function srcCleanup()
     {
-        // We need to remove from the package everything which is not on git...
-        // https://makandracards.com/makandra/17529-git-how-to-remove-ignored-files-from-your-repository-s-directory
-        $result = shell_exec('git check-ignore -n -v src/**/*');
-        var_dump($result);
+        shell_exec('git clean -xdf ' . self::SOURCE_PATH);
     }
 }
