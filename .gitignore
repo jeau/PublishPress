@@ -5,6 +5,9 @@ wpcom-helper.php
 /package/*
 !/package/.gitkeep
 
+/tmp/*
+!/tmp/.gitkeep
+
 /src/vendor/*
 !/src/vendor/autoload.php
 !/src/vendor/composer

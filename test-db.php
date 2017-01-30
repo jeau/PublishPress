@@ -28,15 +28,8 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$wpTestsPath = dirname(__FILE__) . '/../tmp/wordpress/tests/phpunit';
-
-require_once $wpTestsPath . '/includes/functions.php';
-
-function _manually_load_plugin() {
-    require dirname(__FILE__) . '/../src/publishpress.php';
-}
-tests_add_filter('muplugins_loaded', '_manually_load_plugin');
-
-require $wpTestsPath . '/includes/bootstrap.php';
-
-require dirname(__FILE__) . '/testcase-publishpress-ajax.php';
+/**************************************************************
+ * SCRIPT USED ON UNIT TESTS TO CONFIRM THE DATABASE IS LOADED
+ *************************************************************/
+$c = @mysqli_init();
+echo @mysqli_real_connect($c, 'db', 'wp_tests', 'wp_tests', 'wp_tests') ? '1':'0';
