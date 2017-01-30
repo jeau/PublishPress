@@ -35,5 +35,8 @@ if (!class_exists('PublishPress\\Autoloader')) {
     require_once __DIR__ . '/autoloader.php';
 }
 
+// Load vendor libraries
+require_once __DIR__ . '/vendor/autoload.php';
+
 // Register the PublishPress library
 PublishPress\Autoloader::register('PublishPress\\', PUBLISHPRESS_LIBRARY_PATH);

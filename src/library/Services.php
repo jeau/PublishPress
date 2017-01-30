@@ -43,10 +43,10 @@
       *
       * @param Pimple $pimple An Container instance
       */
-     public function register(Pimple $pimple)
+     public function register(\Pimple\Container $container)
      {
-         $pimple['uri'] = function (OSMap\Container $c) {
-             return new OSMap\Joomla\Uri;
+         $container['plugin'] = function (\Pimple\Container $c) {
+             return new Plugin;
          };
      }
  }
