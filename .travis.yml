@@ -1,3 +1,5 @@
+sudo: true
+
 language: php
 
 php:
@@ -65,5 +67,3 @@ before_script:
     - cd "/tmp/wordpress/src/wp-content/plugins/$PLUGIN_SLUG"
 
 script: phpunit
-
-sudo: false
