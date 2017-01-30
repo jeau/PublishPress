@@ -1,8 +1,9 @@
 .svn
 wpcom-helper.php
 .DS_Store
-./package
-!./package/.gitkeep
+
+/package/*
+!/package/.gitkeep
 
 /src/vendor/*
 !/src/vendor/autoload.php
