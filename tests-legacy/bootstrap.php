@@ -27,3 +27,16 @@
  * You should have received a copy of the GNU General Public License
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+$wpTestsPath = dirname(__FILE__) . '/../tmp/wordpress/tests/phpunit';
+
+require_once $wpTestsPath . '/includes/functions.php';
+
+function _manually_load_plugin() {
+    require dirname(__FILE__) . '/../src/publishpress.php';
+}
+tests_add_filter('muplugins_loaded', '_manually_load_plugin');
+
+require $wpTestsPath . '/includes/bootstrap.php';
+
+require dirname(__FILE__) . '/testcase-publishpress-ajax.php';
