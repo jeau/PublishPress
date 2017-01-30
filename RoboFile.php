@@ -50,9 +50,6 @@ class RoboFile extends \Robo\Tasks
     {
         $this->say('Building the package');
 
-        // Make a cleanup before build the package
-        $this->srcCleanup();
-
         // Build the package
         $filename = self::PLUGIN_NAME . '.zip';
         $packPath = self::PACKAGE_PATH . '/'. $filename;
@@ -216,7 +213,7 @@ class RoboFile extends \Robo\Tasks
         return $return;
     }
 
-    private function srcCleanup()
+    public function packCleanup()
     {
         shell_exec('git clean -xdf ' . self::SOURCE_PATH);
     }
