@@ -88,7 +88,7 @@ PHP_CONT_ID=$(docker run -d --rm --link $MYSQL_CONT_ID:db -v $WP_PATH:/var/www/h
 echo "PHP container ID: $PHP_CONT_ID"
 
 echo "Waiting for MySQL..."
-until echo `docker exec -t $PHP_CONT_ID php -f /plugin/test-db.php` | grep "1" -C 99999; do echo '.'; sleep 1; done
+until echo `docker exec -t $PHP_CONT_ID php -f /plugin/tests/_test-db.php` | grep "1" -C 99999; do echo '.'; sleep 1; done
 
 echo "Running the tests"
 docker exec -t $PHP_CONT_ID bash -c "cd /plugin; phpunit"
