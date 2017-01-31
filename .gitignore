@@ -56,3 +56,5 @@ tests/_output/*
 /src/vendor/composer/composer/tests
 /src/vendor/composer/ca-bundle
 /src/vendor/composer/composer
+/src/vendor/composer/semver
+/src/vendor/composer/spdx-licenses
