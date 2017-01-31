@@ -91,4 +91,30 @@ class FunctionsProvider
     {
         return \add_action($tag, $function_to_add, $priority, $accepted_args);
     }
+
+    /**
+     * Calls load_plugin_textdomain
+     *
+     * @param string $domain
+     * @param string $deprecated
+     * @param string $plugin_real_path
+     * @return bool
+     * @see https://developer.wordpress.org/reference/functions/load_plugin_textdomain/
+     */
+    public function loadPluginTextdomain($domain, $deprecated = false, $plugin_real_path = false)
+    {
+        return \load_plugin_textdomain($domain, $deprecated, $plugin_real_path);
+    }
+
+    /**
+     * Calls plugin_basename
+     *
+     * @param string $file
+     * @return string
+     * @see https://developer.wordpress.org/reference/functions/plugin_basename/
+     */
+    public function pluginBasename($file)
+    {
+        return \plugin_basename($file);
+    }
 }

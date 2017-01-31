@@ -38,29 +38,6 @@ class Plugin
     public $optionsGroup     = 'publishpress_';
     public $optionsGroupName = 'publishpress_options';
 
-    /**
-     * The constructor
-     */
-    public function __construct()
-    {
-        $this->setup_globals();
-        $this->setup_actions();
-    }
-
-    public function init()
-    {
-        add_action('plugins_loaded', array($this, 'getInstance'));
-    }
-
-    public function getInstance()
-    {
-        return $this;
-    }
-
-    private function setup_globals()
-    {
-        $this->modules = new stdClass();
-    }
 
     /**
      * Include the common resources to PublishPress and dynamically load the modules
@@ -130,29 +107,12 @@ class Plugin
     }
 
     /**
-     * Setup the default hooks and actions
-     *
-     * @since PublishPress 0.7.4
-     * @access private
-     * @uses add_action() To add various actions
-     */
-    private function setup_actions()
-    {
-        add_action('init', array($this, 'action_init'));
-        add_action('init', array($this, 'action_init_after'), 1000);
-
-        add_action('admin_init', array($this, 'action_admin_init'));
-
-        do_action_ref_array('publishpress_after_setup_actions', array(&$this));
-    }
-
-    /**
      * Inititalizes the PublishPresss!
      * Loads options for each registered module and then initializes it if it's active
      */
     public function action_init()
     {
-        load_plugin_textdomain('publishpress', null, dirname(plugin_basename(__FILE__)) . '/languages/');
+        // @TODO: Continue refactoring this
 
         $this->load_modules();
 

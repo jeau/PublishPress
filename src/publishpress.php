@@ -39,4 +39,4 @@
 require __DIR__ . '/include.php';
 
 $container = PublishPress\Factory::getContainer();
-$container->plugin->init();
+$container->plugin->setup();

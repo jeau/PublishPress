@@ -39,7 +39,7 @@ class PluginTest extends \Codeception\Test\Unit
         );
     }
 
-    public function testInitAddActionPluginsLoaded()
+    public function testSetupAddActionPluginsLoaded()
     {
         $container = Stub::make(
             'PublishPress\\Core\\Container',
@@ -47,7 +47,7 @@ class PluginTest extends \Codeception\Test\Unit
                 'wpfunc' => Stub::make(
                     'PublishPress\\Core\\FunctionsProvider',
                     array(
-                        'addAction' => Stub::once(function($tag, $callable) {
+                        'addAction' => Stub::exactly(2, function($tag, $callable) {
                             $this->actions[$tag] = $callable;
 
                             return true;
@@ -57,16 +57,34 @@ class PluginTest extends \Codeception\Test\Unit
             )
         );
         $plugin = new Plugin($container);
-        $plugin->init();
+        $plugin->setup();
 
         $this->assertArrayHasKey(
             'plugins_loaded',
             $this->actions,
-            'After init it should add an action to plugins_loaded'
+            'The setup should add an action to plugins_loaded'
         );
         $this->assertTrue(
             is_callable($this->actions['plugins_loaded']),
-            'The action needs a callable function/method'
+            'The action plugins_loaded needs a callable function/method'
+        );
+    }
+
+    public function testGetSlug()
+    {
+        $container = Stub::make('PublishPress\\Core\\Container');
+        $plugin    = new Plugin($container);
+        $slug      = $plugin->getSlug();
+
+        $this->assertTrue(
+            is_string($slug),
+            'The slug should always be a string'
+        );
+
+        $this->assertEquals(
+            'publishpress',
+            $slug,
+            'The slug should be: publishpress'
         );
     }
 }

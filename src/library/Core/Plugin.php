@@ -36,6 +36,11 @@ use PublishPress\Factory;
 class Plugin
 {
     /**
+     * Plugin's slug
+     */
+    const SLUG = 'publishpress';
+
+    /**
      * Options group
      */
     const OPTIONS_GROUP = 'publishpress_';
@@ -63,8 +68,6 @@ class Plugin
     public function __construct(Container $container)
     {
         $this->container = $container;
-
-        $this->setupActions();
     }
 
     /**
@@ -80,10 +83,47 @@ class Plugin
     }
 
     /**
-     * Initialize the plugin adding the respective action
+     * Setup the plugin adding the respective actions
      */
-    public function init()
+    public function setup()
     {
         $this->container->wpfunc->addAction('plugins_loaded', array($this, 'getInstance'));
+        $this->container->wpfunc->addAction('init', array($this, 'loadTextDomain'));
+        $this->container->wpfunc->addAction('init', array($this, 'loadModules'));
+
+        // $this->container->wpfunc->addAction('init', array($this, 'action_init_after'), 1000);
+        // $this->container->wpfunc->addAction('admin_init', array($this, 'action_admin_init'));
+
+        // do_action_ref_array('publishpress_after_setup_actions', array(&$this));
+    }
+
+    /**
+     * Returns the plugin's slug
+     *
+     * @return string
+     */
+    public function getSlug()
+    {
+        return self::SLUG;
+    }
+
+    /**
+     * Loads the plugins' text domain
+     */
+    public function loadTextDomain()
+    {
+        $this->container->wpfunc->loadPluginTextdomain(
+            $this->getSlug(),
+            null,
+            $this->container->helper->getLanguagesDir()
+        );
+    }
+
+    /**
+     * Loads the plugin's modules
+     */
+    public function loadModules()
+    {
+        // @TODO: Continue refactoring this
     }
 }

@@ -28,33 +28,24 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- namespace PublishPress\Core;
+namespace PublishPress\Core;
 
- /**
-  *
-  */
- class Services implements \Pimple\ServiceProviderInterface
- {
-     /**
-      * Registers services on the given container.
-      *
-      * This method should only be used to configure services and parameters.
-      * It should not get services.
-      *
-      * @param Pimple $pimple An Container instance
-      */
-     public function register(\Pimple\Container $container)
-     {
-         $container['plugin'] = function (\Pimple\Container $c) {
-             return new Plugin($c);
-         };
+class Helper
+{
+    private $container;
 
-         $container['wpfunc'] = function (\Pimple\Container $c) {
-             return new FunctionstProvider;
-         };
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
-         $container['helper'] = function (\Pimple\Container $c) {
-             return new Helper($c);
-         };
-     }
- }
+    /**
+     * Get the path for the language directory
+     */
+    public function getLanguagesDir()
+    {
+        $slug = $this->container->plugin->getSlug();
+
+        return dirname($this->container->wpfunc->pluginBasename($slug)) . '/languages/';
+    }
+}
