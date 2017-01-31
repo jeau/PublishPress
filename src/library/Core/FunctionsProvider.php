@@ -41,8 +41,8 @@ class FunctionsProvider
      *
      * @param string $path
      * @param string plugin
-     * @see https://developer.wordpress.org/reference/functions/plugins_url/
      * @return string
+     * @see https://developer.wordpress.org/reference/functions/plugins_url/
      */
     public function pluginsUrl($path = '', $plugin = '')
     {
@@ -55,8 +55,8 @@ class FunctionsProvider
      * @param string $key
      * @param string $value
      * @param string $url
-     * @see https://developer.wordpress.org/reference/functions/add_query_arg/
      * @return string
+     * @see https://developer.wordpress.org/reference/functions/add_query_arg/
      */
     public function addQueryArg($key, $value = '', $url = '')
     {
@@ -69,8 +69,8 @@ class FunctionsProvider
      * @param int $blog_id
      * @param string $path
      * @param string $scheme
-     * @see https://developer.wordpress.org/reference/functions/get_admin_url/
      * @return string
+     * @see https://developer.wordpress.org/reference/functions/get_admin_url/
      */
     public function getAdminUrl($blog_id = null, $path = '', $scheme = 'admin')
     {
@@ -84,8 +84,8 @@ class FunctionsProvider
      * @param callable $function_to_add
      * @param int $priority
      * @param int $accepted_args
-     * @see https://developer.wordpress.org/reference/functions/add_action/
      * @return bool
+     * @see https://developer.wordpress.org/reference/functions/add_action/
      */
     public function addAction($tag, $function_to_add, $priority = 10, $accepted_args = 1)
     {
