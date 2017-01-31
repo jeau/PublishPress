@@ -28,9 +28,10 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PublishPress;
+namespace PublishPress\Core;
 
 use stdClass;
+use PublishPress\Factory;
 
 class Plugin
 {
@@ -45,6 +46,13 @@ class Plugin
     const OPTIONS_GROUP_NAME = 'publishpress_options';
 
     /**
+     * The container
+     *
+     * @var PublishPress\Core\Container
+     */
+    private $container;
+
+    /**
      * List of loaded modules
      */
     public $modules = array();
@@ -52,21 +60,23 @@ class Plugin
     /**
      * The constructor
      */
-    public function __construct()
+    public function __construct(Container $container)
     {
+        $this->container = $container;
 
+        $this->setupActions();
     }
 
     /**
-     * Return the current instance
+     * Return the current instance. This looks redundant but is used on the
+     * plugins_loaded action, which expects an instance. Instead of create an
+     * annonymous function, we have this method.
      *
      * @return Plugin
      */
     public function getInstance()
     {
-        $container = Factory::getContainer();
-
-        return $container->plugin;
+        return $this;
     }
 
     /**
@@ -74,6 +84,6 @@ class Plugin
      */
     public function init()
     {
-        add_action('plugins_loaded', array($this, 'getInstance'));
+        $this->container->wpfunc->addAction('plugins_loaded', array($this, 'getInstance'));
     }
 }

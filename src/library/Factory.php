@@ -48,17 +48,17 @@
         if (empty(static::$container)) {
             $config = array();
 
-            $container = new Container(
+            $container = new Core\Container(
                 array(
-                    'configuration' => new Configuration($config)
+                    'configuration' => new Core\Configuration($config)
                 )
             );
 
-            $container->register(new Services);
+            $container->register(new Core\Services);
 
             static::$container = $container;
         }
 
         return static::$container;
     }
- }
+}

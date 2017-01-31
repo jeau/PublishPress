@@ -28,15 +28,21 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once __DIR__ . '/define.php';
+defined('ABSPATH') or die("No direct script access allowed.");
 
-// Autoloader
-if (!class_exists('PublishPress\\Autoloader')) {
-    require_once __DIR__ . '/autoloader.php';
+if (!defined('PUBLISHPRESS_LOADED')) {
+    require_once __DIR__ . '/define.php';
+
+    // Autoloader
+    if (!class_exists('PublishPress\\Autoloader')) {
+        require_once __DIR__ . '/autoloader.php';
+    }
+
+    // Load vendor libraries
+    require_once __DIR__ . '/vendor/autoload.php';
+
+    // Register the PublishPress library
+    PublishPress\Autoloader::register('PublishPress\\', PUBLISHPRESS_LIBRARY_PATH);
+
+    define('PUBLISHPRESS_LOADED', 1);
 }
-
-// Load vendor libraries
-require_once __DIR__ . '/vendor/autoload.php';
-
-// Register the PublishPress library
-PublishPress\Autoloader::register('PublishPress\\', PUBLISHPRESS_LIBRARY_PATH);

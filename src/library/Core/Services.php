@@ -28,7 +28,7 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- namespace PublishPress;
+ namespace PublishPress\Core;
 
  /**
   *
@@ -46,7 +46,11 @@
      public function register(\Pimple\Container $container)
      {
          $container['plugin'] = function (\Pimple\Container $c) {
-             return new Plugin;
+             return new Plugin($c);
+         };
+
+         $container['wpfunc'] = function (\Pimple\Container $c) {
+             return new FunctionstProvider;
          };
      }
  }

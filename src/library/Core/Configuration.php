@@ -28,7 +28,7 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PublishPress;
+namespace PublishPress\Core;
 
 /**
  * A simple class for handling layered variables

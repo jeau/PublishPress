@@ -28,12 +28,22 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('PUBLISHPRESS_VERSION', '1.0.0');
+defined('ABSPATH') or die("No direct script access allowed.");
 
-define('PUBLISHPRESS_ROOT_PATH', dirname(__FILE__));
-define('PUBLISHPRESS_FILE_PATH', PUBLISHPRESS_ROOT_PATH . '/' . basename(__FILE__));
-define('PUBLISHPRESS_LIBRARY_PATH', PUBLISHPRESS_ROOT_PATH . '/library');
+/**
+ * Only define a constant if it has not been defined yet.
+ * This allow us to pre-define a constant, specially for tests purposes.
+ *
+ * @param string $name
+ * @param string $value
+ */
+function defineConst($name, $value)
+{
+    if (!defined($name)) {
+        define($name, $value);
+    }
+}
 
-define('PUBLISHPRESS_URL', plugins_url('/', __FILE__));
-
-define('PUBLISHPRESS_SETTINGS_PAGE', add_query_arg('page', 'pp-settings', get_admin_url(null, 'admin.php')));
+defineConst('PUBLISHPRESS_ROOT_PATH', dirname(__FILE__));
+defineConst('PUBLISHPRESS_FILE_PATH', PUBLISHPRESS_ROOT_PATH . '/' . basename(__FILE__));
+defineConst('PUBLISHPRESS_LIBRARY_PATH', PUBLISHPRESS_ROOT_PATH . '/library');
