@@ -7,6 +7,5 @@ $baseDir = dirname(dirname($vendorDir));
 
 return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
-    'Routes' => array($vendorDir . '/upstatement/routes'),
     'Pimple' => array($vendorDir . '/pimple/pimple/src'),
 );
