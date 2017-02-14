@@ -55,9 +55,9 @@ if (!class_exists('PP_Settings')) {
                 'default_options'      => array(
                     'enabled' => 'on',
                 ),
-                'configure_page_cb' => 'print_default_settings',
-                'autoload'          => true,
-                'add_menu' => true,
+                'configure_page_cb'    => 'print_default_settings',
+                'autoload'             => true,
+                'add_menu'             => true,
             );
             $this->module = PublishPress()->register_module('settings', $args);
         }
@@ -67,8 +67,6 @@ if (!class_exists('PP_Settings')) {
          */
         public function init()
         {
-            add_action('admin_init', array($this, 'helper_settings_validate_and_save'), 100);
-
             add_action('admin_print_styles', array($this, 'action_admin_print_styles'));
             add_action('admin_print_scripts', array($this, 'action_admin_print_scripts'));
             add_action('admin_enqueue_scripts', array($this, 'action_admin_enqueue_scripts'));
@@ -84,24 +82,29 @@ if (!class_exists('PP_Settings')) {
         {
             global $publishpress;
 
-            add_menu_page($this->module->title, $this->module->title, 'manage_options', $this->module->settings_slug, array($this, 'settings_page_controller')) ;
+            add_menu_page(
+                $this->module->title,
+                $this->module->title,
+                'manage_options',
+                $this->module->settings_slug,
+                array($this, 'settings_page_controller')
+            );
 
             foreach ($publishpress->modules as $mod_name => $mod_data) {
                 $add_menu = isset($mod_data->add_menu) && $mod_data->add_menu === true;
 
                 if (isset($mod_data->options->enabled) && $mod_data->options->enabled == 'on'
                     && $mod_data->configure_page_cb && $mod_name != $this->module->name && $add_menu) {
-                    add_submenu_page($this->module->settings_slug, $mod_data->title, $mod_data->title, 'manage_options', $mod_data->settings_slug, array($this, 'settings_page_controller')) ;
+                    add_submenu_page(
+                        $this->module->settings_slug,
+                        $mod_data->title,
+                        $mod_data->title,
+                        'manage_options',
+                        $mod_data->settings_slug,
+                        array($this, 'settings_page_controller')
+                    );
                 }
             }
-
-            add_options_page(
-                __('PublishPress Settings'),
-                'PublishPress',
-                'manage_options',
-                'pp-options',
-                array($this, 'options_page_controller')
-            );
         }
 
         public function action_admin_enqueue_scripts()
@@ -379,124 +382,6 @@ if (!class_exists('PP_Settings')) {
                 }
                 echo '<br />';
             }
-        }
-
-        /**
-         * Validation and sanitization on the settings field
-         * This method is called automatically/ doesn't need to be registered anywhere
-         *
-         * @since 0.7
-         */
-        public function helper_settings_validate_and_save()
-        {
-            if (!isset($_POST['action'], $_POST['_wpnonce'], $_POST['option_page'], $_POST['_wp_http_referer'], $_POST['publishpress_module_name'], $_POST['submit']) || !is_admin()) {
-                return false;
-            }
-
-            global $publishpress;
-            $module_name = sanitize_key($_POST['publishpress_module_name']);
-
-            if ($_POST['action'] != 'update'
-                || $_POST['option_page'] != $publishpress->$module_name->module->options_group_name) {
-                return false;
-            }
-
-            if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['_wpnonce'], $publishpress->$module_name->module->options_group_name . '-options')) {
-                wp_die(__('Cheatin&#8217; uh?'));
-            }
-
-            $new_options = (isset($_POST[$publishpress->$module_name->module->options_group_name])) ? $_POST[$publishpress->$module_name->module->options_group_name] : array();
-
-            // Only call the validation callback if it exists?
-            if (method_exists($publishpress->$module_name, 'settings_validate')) {
-                $new_options = $publishpress->$module_name->settings_validate($new_options);
-            }
-
-            // Cast our object and save the data.
-            $new_options = (object)array_merge((array)$publishpress->$module_name->module->options, $new_options);
-            $publishpress->update_all_module_options($publishpress->$module_name->module->name, $new_options);
-
-            // Redirect back to the settings page that was submitted without any previous messages
-            $goback = add_query_arg('message', 'settings-updated',  remove_query_arg(array('message'), wp_get_referer()));
-            wp_safe_redirect($goback);
-            exit;
-        }
-
-        public function options_page_controller()
-        {
-            global $publishpress;
-
-            $module_settings_slug = isset($_GET['module']) && !empty($_GET['module']) ? $_GET['module'] : 'pp-modules-settings-settings';
-            $requested_module = $publishpress->get_module_by('settings_slug', $module_settings_slug);
-            if (empty($requested_module)) {
-                $requested_module = 'pp-calendar-settings';
-            }
-
-            // If there's been a message, let's display it
-            if (isset($_GET['message'])) {
-                $message = $_GET['message'];
-            } elseif (isset($_REQUEST['message'])) {
-                $message = $_REQUEST['message'];
-            } elseif (isset($_POST['message'])) {
-                $message = $_POST['message'];
-            } else {
-                $message = false;
-            }
-            if ($message && isset($requested_module->messages[$message])) {
-                $display_text = '<span class="publishpress-updated-message publishpress-message">' . esc_html($requested_module->messages[$message]) . '</span>';
-            }
-
-            // If there's been an error, let's display it
-            if (isset($_GET['error'])) {
-                $error = $_GET['error'];
-            } elseif (isset($_REQUEST['error'])) {
-                $error = $_REQUEST['error'];
-            } elseif (isset($_POST['error'])) {
-                $error = $_POST['error'];
-            } else {
-                $error = false;
-            }
-            if ($error && isset($requested_module->messages[$error])) {
-                $display_text = '<span class="publishpress-error-message publishpress-message">' . esc_html($requested_module->messages[$error]) . '</span>';
-            }
-
-            ?>
-            <h1><?php echo __('PublishPress', 'publishpress') . ': ' . $requested_module->title; ?></h1>
-            <div class="wrap publishpress-admin">
-                <div class="explanation">
-                    <?php if ($requested_module->short_description): ?>
-                    <h3><?php echo $requested_module->short_description; ?></h3>
-                    <?php endif; ?>
-                    <?php if ($requested_module->extended_description): ?>
-                    <p><?php echo $requested_module->extended_description; ?></p>
-                    <?php endif; ?>
-                </div>
-
-                <h2 class="nav-tab-wrapper">
-                    <?php
-                    foreach ($publishpress->modules as $mod_name => $mod_data) {
-                        if (!isset($mod_data->options_page) || $mod_data->options_page === false || $mod_data->options->enabled !== 'on') {
-                            continue;
-                        }
-                        ?>
-                        <a
-                            href="?page=pp-options&module=<?php echo $mod_data->settings_slug; ?>"
-                            class="nav-tab <?php echo ($module_settings_slug == $mod_data->settings_slug) ? 'nav-tab-active' : ''; ?> "
-                            >
-                            <?php echo $mod_data->title ?>
-                        </a>
-                        <?php
-                    }
-                    ?>
-                </h2>
-                <?php
-                $configure_callback    = $requested_module->configure_page_cb;
-                $requested_module_name = $requested_module->name;
-
-                $publishpress->$requested_module_name->$configure_callback();
-                ?>
-            </div>
-            <?php
         }
     }
 }
