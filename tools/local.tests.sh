@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# @TODO: Move all this to the integration, functional and acceptance tests
+
 # Rabbitmq
 # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B73A36E6026DFCA
 
@@ -43,4 +45,4 @@ sed -i "s/yourpasswordhere//" /var/www/wp-tests-config.php
 
 # Script
 echo "Running the tests"
-php-${PHP_VERSION} /opt/phpunit-php-${PHP_VERSION} $@
+php-${PHP_VERSION} /opt/codecept-php-${PHP_VERSION} $@

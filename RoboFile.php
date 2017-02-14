@@ -211,4 +211,33 @@ class RoboFile extends \Robo\Tasks
 
         return $return;
     }
+
+    public function testsRun($phpVersion = '7.1', $wpVersion = '4.7')
+    {
+        $this->say('Starting container and tests...');
+
+        $result = $this->taskDockerRun("ostraining/phpfarm-wordpress-tests:{$wpVersion}")
+            ->env('PHP_VERSION', $phpVersion)
+            ->env('PLUGIN_SLUG', 'publishpress')
+            ->interactive()
+            ->option('--rm')
+            ->volume(__DIR__, '/plugin')
+            ->exec("php-{$phpVersion} /opt/codecept-php-{$phpVersion} run")
+            ->run();
+    }
+
+    public function testsCmd($cmd = '')
+    {
+        $phpVersion = '7.1';
+        $wpVersion  = '4.7';
+
+        $result = $this->taskDockerRun("ostraining/phpfarm-wordpress-tests:{$wpVersion}")
+            ->env('PHP_VERSION', $phpVersion)
+            ->env('PLUGIN_SLUG', 'publishpress')
+            ->interactive()
+            ->option('--rm')
+            ->volume(__DIR__, '/plugin')
+            ->exec("php-{$phpVersion} /opt/codecept-php-{$phpVersion} " . $cmd)
+            ->run();
+    }
 }
