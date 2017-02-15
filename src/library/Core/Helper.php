@@ -30,36 +30,38 @@
 
 namespace Publishpress\Core;
 
- class Helper
- {
-     /**
-      * Only define a constant if it has not been defined yet.
-      * This allow us to pre-define a constant, specially for tests purposes.
-      *
-      * @param string $name
-      * @param string $value
-      */
-     public function defineConst($name, $value)
-     {
-         if (!defined($name)) {
-             define($name, $value);
-         }
-     }
+use \Publishpress\Core;
 
-     /**
-      * Returns the version number found on the file comments. Used to get the
-      * version of the plugin before the get_plugin_data is available
-      *
-      * @param string $path
-      *
-      * @return string
-      */
-     public function getPluginVersion($path)
-     {
-         $file = file_get_contents($path);
+class Helper extends Core\ServiceAbstract
+{
+    /**
+     * Only define a constant if it has not been defined yet.
+     * This allow us to pre-define a constant, specially for tests purposes.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public function defineConst($name, $value)
+    {
+        if (!defined($name)) {
+            define($name, $value);
+        }
+    }
 
-         preg_match('/Version:\s*([0-9\.a-z]*)/i', $file, $matches);
+    /**
+    * Returns the version number found on the file comments. Used to get the
+    * version of the plugin before the get_plugin_data is available
+    *
+    * @param string $path
+    *
+    * @return string
+    */
+    public function getPluginVersion($path)
+    {
+        $file = file_get_contents($path);
 
-         return $matches[1];
-     }
- }
+        preg_match('/Version:\s*([0-9\.a-z]*)/i', $file, $matches);
+
+        return $matches[1];
+    }
+}

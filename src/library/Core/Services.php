@@ -28,35 +28,58 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
- /**
-  *
-  */
- class Services implements \Pimple\ServiceProviderInterface
- {
-     /**
-      * Registers services on the given container.
-      *
-      * This method should only be used to configure services and parameters.
-      * It should not get services.
-      *
-      * @param Pimple $pimple An Container instance
-      */
-     public function register(\Pimple\Container $container)
-     {
-         $container['plugin'] = function (\Pimple\Container $c) {
-             return new Plugin($c);
-         };
-
-         $container['caller'] = function (\Pimple\Container $c) {
-             return new Framework\FunctionsProvider;
-         };
-
-         $container['helper'] = function (\Pimple\Container $c) {
-             return new Helper($c);
-         };
-     }
- }
 namespace Publishpress\Core;
 
 use Publishpress\Framework;
+
+/**
+ *
+ */
+class Services implements \Pimple\ServiceProviderInterface
+{
+    /**
+     * Registers services on the given container.
+     *
+     * This method should only be used to configure services and parameters.
+     * It should not get services.
+     *
+     * @param Pimple $pimple An Container instance
+     */
+    public function register(\Pimple\Container $container)
+    {
+        $container['plugin'] = function (\Pimple\Container $c) {
+            $plugin = new Plugin;
+            $plugin->setContainer($c);
+
+            return $plugin;
+        };
+
+        $container['caller'] = function (\Pimple\Container $c) {
+            return new Framework\FunctionsProvider;
+        };
+
+        $container['helper'] = function (\Pimple\Container $c) {
+            return new Helper;
+        };
+
+        $container['PUBLISHPRESS_SLUG'] = function (\Pimple\Container $c) {
+            return 'publishpress';
+        };
+
+        $container['PUBLISHPRESS_ROOT_PATH'] = function (\Pimple\Container $c) {
+            return dirname(dirname(dirname(__FILE__)));
+        };
+
+        $container['PUBLISHPRESS_FILE_PATH'] = function (\Pimple\Container $c) {
+            return $c['PUBLISHPRESS_ROOT_PATH'] . '/' . $c['PUBLISHPRESS_SLUG'] . '.php';
+        };
+
+        $container['PUBLISHPRESS_VERSION'] = function (\Pimple\Container $c) {
+            return $c['helper']->getPluginVersion($c['PUBLISHPRESS_FILE_PATH']);
+        };
+
+        $container['PUBLISHPRESS_URL'] = function (\Pimple\Container $c) {
+            return $c['caller']->pluginsUrl($c['PUBLISHPRESS_FILE_PATH']);
+        };
+    }
+}

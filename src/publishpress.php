@@ -38,7 +38,4 @@
 
 require_once 'include.php';
 
-echo PublishPress\Factory::getContainer()->caller->ahaTest('Opa!');
-die;
-
 // Publishpress\Factory::getContainer()->plugin->setup();

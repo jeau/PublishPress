@@ -40,12 +40,13 @@
     /**
      * Get a OSMap container class
      *
+     * @param boolean $force
      * @return Container
      * @throws \Exception
      */
-    public static function getContainer()
+    public static function getContainer($force = false)
     {
-        if (empty(static::$container)) {
+        if (empty(static::$container) || $force) {
             $config = array();
 
             $container = new Core\Container(

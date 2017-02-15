@@ -30,11 +30,14 @@
 
 namespace Publishpress\Framework;
 
+use \Pimple\Container;
+use \Publishpress\Core;
+
 /**
  * Provides a OOP interface for the WordPress' methods. This allows to create
  * mocks for Unit Tests, avoiding call external dependencies.
  */
-class FunctionsProvider
+class FunctionsProvider extends Core\ServiceAbstract
 {
     /**
      * Call a function find on the global context. Used to call native WordPress
@@ -48,6 +51,14 @@ class FunctionsProvider
      */
     public function __call($name, $arguments)
     {
+        // Check if the method exists on this class
+        if (method_exists($this, $name)) {
+            return call_user_func_array(array($this, $name), $arguments);
+        }
+
+        // The method doesn't exists here, let's try calling it from the
+        // global context
+
         // Break the method name
         $pieces = preg_split('/(?=[A-Z])/', $name);
 

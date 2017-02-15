@@ -28,22 +28,18 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use Publishpress\Core\Helper;
-use Publishpress\Autoloader;
+namespace Publishpress\Core;
 
-defined('ABSPATH') or die("No direct script access allowed.");
+/**
+ * An abstract class for Services, providing a method to set the container
+ * as dependency.
+ */
+abstract class ServiceAbstract
+{
+    protected $container;
 
-if (!defined('PUBLISHPRESS_LOADED')) {
-    // Autoloader
-    if (!class_exists('Publishpress\\Autoloader')) {
-        require_once __DIR__ . '/autoloader.php';
+    public function setContainer(\Pimple\Container $container)
+    {
+        $this->container = $container;
     }
-
-    // Load vendor libraries
-    require_once __DIR__ . '/vendor/autoload.php';
-
-    // Register Publishpress' libraries
-    Autoloader::register('Publishpress\\', __DIR__ . '/library');
-
-    define('PUBLISHPRESS_LOADED', 1);
 }

@@ -120,4 +120,19 @@
 
          return null;
      }
+
+     /**
+      * Allow to override any defined service.
+      *
+      * @param string $id
+      * @param mixed $newService
+      */
+     public function setServiceEntry($id, \Closure $newService)
+     {
+         if ($this->offsetExists($id)) {
+             $this->offsetUnset($id);
+         }
+
+         $this->offsetSet($id, $newService);
+     }
  }
