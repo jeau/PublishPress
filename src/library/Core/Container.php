@@ -28,7 +28,7 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- namespace PublishPress\Core;
+ namespace Publishpress\Core;
 
  class Container extends \Pimple\Container
  {

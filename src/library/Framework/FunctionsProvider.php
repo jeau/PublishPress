@@ -28,7 +28,7 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace PublishPress\Framework;
+namespace Publishpress\Framework;
 
 /**
  * Provides a OOP interface for the WordPress' methods. This allows to create

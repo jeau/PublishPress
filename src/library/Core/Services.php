@@ -28,9 +28,6 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- namespace PublishPress\Core;
-
- use PublishPress\Framework;
 
  /**
   *
@@ -60,3 +57,6 @@
          };
      }
  }
+namespace Publishpress\Core;
+
+use Publishpress\Framework;

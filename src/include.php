@@ -28,21 +28,20 @@
  * along with PublishPress.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-use PublishPress\Core\Helper;
+use Publishpress\Core\Helper;
+use Publishpress\Autoloader;
 
 defined('ABSPATH') or die("No direct script access allowed.");
 
 if (!defined('PUBLISHPRESS_LOADED')) {
     // Autoloader
-    if (!class_exists('PublishPress\\Autoloader')) {
+    if (!class_exists('Publishpress\\Autoloader')) {
         require_once __DIR__ . '/autoloader.php';
     }
 
     // Load vendor libraries
     require_once __DIR__ . '/vendor/autoload.php';
 
-    // Register PublishPress' libraries
-    PublishPress\Autoloader::register('PublishPress\\', __DIR__ . '/library');
 
     $helper = PublishPress\Factory::getContainer()->helper;
     $caller = PublishPress\Factory::getContainer()->caller;
@@ -52,6 +51,8 @@ if (!defined('PUBLISHPRESS_LOADED')) {
     $helper->defineConst('PUBLISHPRESS_VERSION', $helper->getPluginVersion(PUBLISHPRESS_FILE_PATH));
     $helper->defineConst('PUBLISHPRESS_URL', $caller->pluginsUrl('/', PUBLISHPRESS_FILE_PATH));
     $helper->defineConst('PUBLISHPRESS_SETTINGS_PAGE', $caller->addQueryArg('page', 'pp-settings', get_admin_url(null, 'admin.php')));
+    // Register Publishpress' libraries
+    Autoloader::register('Publishpress\\', __DIR__ . '/library');
 
     define('PUBLISHPRESS_LOADED', 1);
 }
