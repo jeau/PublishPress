@@ -25,15 +25,16 @@ node_modules
 !/src/vendor/composer/LICENSE
 !/src/vendor/composer/installed.json
 
-!/src/vendor/symfony
-/src/vendor/symfony/*
-!/src/vendor/symfony/polyfill-mbstring
-/src/vendor/symfony/polyfill-mbstring/composer.json
-/src/vendor/symfony/polyfill-mbstring/README.md
 !/src/vendor/twig
 !/src/vendor/twig/twig
 /src/vendor/twig/twig/*
 !/src/vendor/twig/twig/lib
 !/src/vendor/twig/twig/LICENSE
+
+!/src/vendor/pimple
+!/src/vendor/pimple/pimple
+/src/vendor/pimple/pimple/*
+!/src/vendor/pimple/pimple/src
+
 
 tests/_output/*
