@@ -49,6 +49,7 @@ if (!class_exists('PP_Modules_Settings')) {
                 'module_url'           => $this->module_url,
                 'icon_class'           => 'dashicons dashicons-admin-settings',
                 'slug'                 => 'modules-settings',
+                'settings_slug'        => 'pp-modules-settings',
                 'default_options'      => array(
                     'enabled'    => 'on',
                 ),
@@ -67,6 +68,8 @@ if (!class_exists('PP_Modules_Settings')) {
         {
             add_action('admin_init', array($this, 'register_settings'));
             add_action('admin_enqueue_scripts', array($this, 'add_admin_scripts'));
+
+            add_action('pp_add_submenu_page', array($this, 'add_submenu_page'), 999);
         }
 
         /**
@@ -76,8 +79,12 @@ if (!class_exists('PP_Modules_Settings')) {
         {
             global $pagenow;
 
-            wp_enqueue_script('publishpress-modules-settings', $this->module_url . 'lib/modules-settings.js', array('jquery', 'post'), PUBLISHPRESS_VERSION, true);
-            wp_enqueue_style('publishpress-modules-css', $this->module_url . 'lib/modules-settings.css', false, PUBLISHPRESS_VERSION, 'all');
+            // Only load calendar styles on the calendar page
+            if ($pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page'] == $this->module->settings_slug)
+            {
+                wp_enqueue_script('publishpress-modules-settings', $this->module_url . 'lib/modules-settings.js', array('jquery', 'post'), PUBLISHPRESS_VERSION, true);
+                wp_enqueue_style('publishpress-modules-css', $this->module_url . 'lib/modules-settings.css', false, PUBLISHPRESS_VERSION, 'all');
+            }
         }
 
         /**
@@ -105,6 +112,18 @@ if (!class_exists('PP_Modules_Settings')) {
 
         }
 
+        public function add_submenu_page(callable $default_function)
+        {
+            add_submenu_page(
+                PP_Settings::SETTINGS_SLUG,
+                $this->module->title,
+                $this->module->title,
+                'manage_options',
+                'pp-modules-settings',
+                $default_function
+            );
+        }
+
         /**
          * Settings page for editorial comments
          *
@@ -113,6 +132,11 @@ if (!class_exists('PP_Modules_Settings')) {
         public function print_configure_view()
         {
             global $publishpress;
+
+            // @TODO: try to display the default configure view without repeat it in an inifinite loop. Move this method to here.
+            // But seems to require change the page all other settings work
+            $publishpress->settings->options_page_controller();
+
             ?>
             <form class="basic-settings" action="<?php echo esc_url(menu_page_url($this->module->settings_slug, false)); ?>" method="post">
                 <?php settings_fields($this->module->options_group_name); ?>

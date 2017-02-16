@@ -31,6 +31,8 @@
 if (!class_exists('PP_Settings')) {
     class PP_Settings extends PP_Module
     {
+        const SETTINGS_SLUG = 'pp-settings';
+
         public $module;
 
         /**
@@ -45,13 +47,13 @@ if (!class_exists('PP_Settings')) {
             // Register the module with PublishPress
             $this->module_url = $this->get_module_url(__FILE__);
             $args             = array(
-                'title'                => __('PublishPress', 'publishpress'),
+                'title'                => __('Dashboard', 'publishpress'),
                 'short_description'    => __('PublishPress is the essential plugin for any site with multiple writers.', 'publishpress'),
                 'extended_description' => false,
                 'module_url'           => $this->module_url,
                 'icon_class'           => 'dashicons dashicons-admin-settings',
                 'slug'                 => 'settings',
-                'settings_slug'        => 'pp-settings',
+                'settings_slug'        => self::SETTINGS_SLUG,
                 'default_options'      => array(
                     'enabled' => 'on',
                 ),
@@ -84,25 +86,49 @@ if (!class_exists('PP_Settings')) {
         {
             global $publishpress;
 
-            add_menu_page($this->module->title, $this->module->title, 'manage_options', $this->module->settings_slug, array($this, 'settings_page_controller')) ;
+            $page_slugs = array();
+            $page_slugs = apply_filters('pp_menu_page_slugs', $page_slugs);
+            $first_page_slug = isset($page_slugs[0]) ? $page_slugs[0] : null;
+            $default_function_for_menu = array($this, 'settings_page_controller');
 
-            foreach ($publishpress->modules as $mod_name => $mod_data) {
-                $add_menu = isset($mod_data->add_menu) && $mod_data->add_menu === true;
-
-                if (isset($mod_data->options->enabled) && $mod_data->options->enabled == 'on'
-                    && $mod_data->configure_page_cb && $mod_name != $this->module->name && $add_menu) {
-                    add_submenu_page($this->module->settings_slug, $mod_data->title, $mod_data->title, 'manage_options', $mod_data->settings_slug, array($this, 'settings_page_controller')) ;
-                }
-            }
-
-            add_submenu_page(
-                $this->module->settings_slug,
-                __('PublishPress Settings'),
-                __('Settings'),
+            add_menu_page(
+                __('PublishPress'),
+                __('PublishPress'),
                 'manage_options',
-                'pp-modules-settings',
-                array($this, 'options_page_controller')
+                self::SETTINGS_SLUG,
+                $default_function_for_menu,
+                null,
+                25
             );
+
+            do_action('pp_add_submenu_page', $default_function_for_menu);
+
+            // @TODO: add the action pp_add_submenu_page for all settings page.
+
+            // foreach ($publishpress->modules as $mod_name => $mod_data) {
+            //     $add_menu = isset($mod_data->add_menu) && $mod_data->add_menu === true;
+            //
+            //     if (isset($mod_data->options->enabled) && $mod_data->options->enabled == 'on'
+            //         && $mod_data->configure_page_cb && $mod_name != $this->module->name && $add_menu) {
+            //         // add_submenu_page(
+            //         //     $this->module->settings_slug,
+            //         //     $mod_data->title,
+            //         //     $mod_data->title,
+            //         //     'manage_options',
+            //         //     $mod_data->settings_slug,
+            //         //     array($this, 'settings_page_controller')
+            //         // );
+            //     }
+            // }
+
+            // add_submenu_page(
+            //     $this->module->settings_slug,
+            //     __('PublishPress Settings'),
+            //     __('Settings'),
+            //     'manage_options',
+            //     'pp-modules-settings',
+            //     array($this, 'options_page_controller')
+            // );
         }
 
         public function action_admin_enqueue_scripts()
@@ -433,6 +459,7 @@ if (!class_exists('PP_Settings')) {
         {
             global $publishpress;
 
+            // @TODO: fix the default module? I think we removed the double 'settings' from there
             $module_settings_slug = isset($_GET['module']) && !empty($_GET['module']) ? $_GET['module'] : 'pp-modules-settings-settings';
             $requested_module = $publishpress->get_module_by('settings_slug', $module_settings_slug);
             if (empty($requested_module)) {

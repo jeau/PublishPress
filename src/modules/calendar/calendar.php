@@ -90,7 +90,6 @@ if (!class_exists('PP_Calendar')) {
                     'content' => __('<p>The calendar is a convenient week-by-week or month-by-month view into your content. Quickly see which stories are on track to being published on time, and which will need extra effort.</p>', 'publishpress'),
                 ),
                 'settings_help_sidebar' => __('<p><strong>For more information:</strong></p><p><a href="https://pressshack.com/features/calendar/">Calendar Documentation</a></p><p><a href="https://github.com/ostraining/PublishPress">PublishPress on Github</a></p>', 'publishpress'),
-                'add_menu'           => true,
                 'show_configure_btn' => false,
                 'options_page'       => true,
                 'page_link'          => admin_url('index.php?page=calendar'),
@@ -125,7 +124,6 @@ if (!class_exists('PP_Calendar')) {
             add_action('admin_init', array($this, 'handle_save_screen_options'));
 
             add_action('admin_init', array($this, 'register_settings'));
-            add_action('admin_menu', array($this, 'action_admin_menu'));
             add_action('admin_print_styles', array($this, 'add_admin_styles'));
             add_action('admin_enqueue_scripts', array($this, 'enqueue_admin_scripts'));
 
@@ -147,6 +145,10 @@ if (!class_exists('PP_Calendar')) {
             // Hacks to fix deficiencies in core
             add_action('pre_post_update', array($this, 'fix_post_date_on_update_part_one'), 10, 2);
             add_action('post_updated', array($this, 'fix_post_date_on_update_part_two'), 10, 3);
+
+            add_action('pp_add_submenu_page', array($this, 'add_submenu_page'), 1);
+
+            add_filter('pp_menu_page_slugs', array($this, 'filter_menu_page_slugs'), 1);
         }
 
         /**
@@ -197,16 +199,6 @@ if (!class_exists('PP_Calendar')) {
         }
 
         /**
-         * Add the calendar link underneath the "Dashboard"
-         *
-         * @uses add_submenu_page
-         */
-        public function action_admin_menu()
-        {
-            add_submenu_page('index.php', __('Calendar', 'publishpress'), __('Calendar', 'publishpress'), apply_filters('pp_view_calendar_cap', 'pp_view_calendar'), $this->module->slug, array($this, 'view_calendar'));
-        }
-
-        /**
          * Add any necessary CSS to the WordPress admin
          *
          * @uses wp_enqueue_style()
@@ -215,7 +207,7 @@ if (!class_exists('PP_Calendar')) {
         {
             global $pagenow;
             // Only load calendar styles on the calendar page
-            if ($pagenow == 'index.php' && isset($_GET['page']) && $_GET['page'] == 'calendar') {
+            if ($pagenow == 'admin.php' && isset($_GET['page']) && $_GET['page'] == $this->module->slug) {
                 wp_enqueue_style('publishpress-calendar-css', $this->module_url . 'lib/calendar.css', false, PUBLISHPRESS_VERSION);
             }
         }
@@ -1997,6 +1989,27 @@ if (!class_exists('PP_Calendar')) {
             unset($this->post_date_cache[$post_ID]);
             $wpdb->update($wpdb->posts, array('post_date' => $post_date), array('ID' => $post_ID));
             clean_post_cache($post_ID);
+        }
+
+        public function filter_menu_page_slugs($slugs)
+        {
+            array_push($slugs, 'pp-calendar-settings');
+
+            return $slugs;
+        }
+
+        public function add_submenu_page(callable $default_function)
+        {
+            $capabilities = apply_filters('pp_view_calendar_cap', 'pp_view_calendar');
+
+            add_submenu_page(
+                PP_Settings::SETTINGS_SLUG,
+                __('Calendar', 'publishpress'),
+                __('Calendar', 'publishpress'),
+                $capabilities,
+                $this->module->slug,
+                array($this, 'view_calendar')
+            );
         }
     } // PP_Calendar
 } // class_exists('PP_Calendar')
